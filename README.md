@@ -127,8 +127,3 @@ Project ini mengubah itu menjadi:
 **Fida Yuzida**
 
 ---
-
-## ⭐ Final Note
-
-> If a recruiter spends more time chatting with your portfolio than reading your CV…
-> **you've already won.**
