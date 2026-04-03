@@ -1,132 +1,129 @@
-# 🤖 Fida's Personal AI — Context-Aware Portfolio Chatbot
+# 🤖 Portfolio Chatbot — RAG-based Personal AI Assistant
 
-🔗 Live Demo: https://chatbot.zid.web.id/
+🔗 **Live Demo**: https://chatbot.zid.web.id/
 
 ---
 
 ## 📌 Overview
 
-Personal AI chatbot berbasis web yang berfungsi sebagai **interactive portfolio assistant**.
+A **context-aware AI chatbot** designed to transform a traditional portfolio into an **interactive conversational interface** 💬
 
-Sistem ini mengimplementasikan pendekatan **lightweight RAG (Retrieval-Augmented Generation)** untuk memastikan setiap jawaban:
+Instead of reading static CVs, users can directly ask about:
 
-* relevan
-* berbasis data
-* tidak hallucinate
+* 🧑‍💼 Experience
+* 🛠️ Skills
+* 🚀 Projects
+
+The system responds with **relevant, data-driven answers** using a lightweight **RAG (Retrieval-Augmented Generation)** approach.
 
 ---
 
 ## ⚙️ Architecture
 
-```id="gk8p2x"
+```id="g7k2df"
 User Input
    ↓
-Keyword & Intent Detection
+🧠 Intent Detection
    ↓
-Topic Mapping
+🏷️ Topic Mapping
    ↓
-Context Retrieval (data.txt)
+📂 Context Retrieval (data.txt)
    ↓
-Dynamic Prompt Injection
+🧩 Prompt Injection
    ↓
-OpenAI API (LLM)
+🤖 OpenAI API
    ↓
-Response (UI)
+💬 Response (UI)
 ```
 
 ---
 
-## 🧠 Core Concepts
+## 🧠 Core Features
 
-### 1. Retrieval-Augmented Generation (RAG-lite)
+* 💬 ChatGPT-style UI (clean & responsive)
+* 🧠 Lightweight RAG system
+* 🎯 Keyword-based topic routing
+* 📂 Structured knowledge base (section-based)
+* 🔍 Portfolio relevance scoring
+* 🧵 Conversation history support
+* ⚡ FastAPI backend (fast & efficient)
 
-Alih-alih mengirim seluruh knowledge ke model, sistem hanya mengirim **context yang relevan**.
+---
 
-```python id="u2pt4j"
+## 🔬 Technical Breakdown
+
+### 📥 Context Retrieval
+
+Only relevant data is injected into the model:
+
+```python id="zq8n2k"
 context = retrieve_context(user_input)
 ```
 
-✔ Lebih efisien
-✔ Lebih akurat
-✔ Minim hallucination
+✔ Improves accuracy
+✔ Reduces token usage
+✔ Minimizes hallucination
 
 ---
 
-### 2. Keyword-Based Topic Routing
+### 🏷️ Topic Routing
 
-Mapping keyword → topic:
-
-```python id="4i9b6q"
-KEYWORD_TOPIC = {
-    "magang": "pengalaman",
-    "skill": "skill",
-    "portfolio": "portfolio"
-}
+```python id="o3k9xp"
+KEYWORD_TOPIC → TOPIC_MAP → SECTIONS
 ```
 
-Kemudian diarahkan ke section:
-
-```python id="4cbz7o"
-TOPIC_MAP = {
-    "pengalaman": ["PENGALAMAN MAGANG", "PENGALAMAN PART-TIME"]
-}
-```
+Maps user queries into structured knowledge domains.
 
 ---
 
-### 3. Section-Based Knowledge Parsing
+### 📂 Knowledge Structure
 
-Data di-parse dari file:
+Stored in:
 
-```id="w5jvha"
+```id="k8f3mz"
 data.txt
 ```
 
-Dengan format:
+Format:
 
-```id="g1m1kg"
+```id="y1l0sm"
 ==== SECTION NAME ====
 content...
 ```
 
-Diubah menjadi dictionary untuk retrieval cepat.
-
 ---
 
-### 4. Portfolio Relevance Scoring
+### 🔍 Portfolio Ranking
 
-Portfolio tidak diambil mentah — tapi di-ranking:
-
-```python id="9qf2v1"
+```python id="a2d7mf"
 score += 1 if word in text else 0
 ```
 
-✔ Query "IoT" → hanya project IoT yang muncul
-✔ Lebih precise dibanding dump semua data
+Ensures only relevant projects are returned.
 
 ---
 
-### 5. Dynamic System Prompt Injection
+### 🧩 Prompt Injection
 
-```python id="q2zkv5"
-dynamic_system = BASE_PROMPT + context
+```python id="p9w4jt"
+system_prompt = BASE_PROMPT + context
 ```
 
-LLM hanya boleh menjawab berdasarkan context tersebut.
+Constrains the model to grounded responses.
 
 ---
 
 ## 🖥️ Tech Stack
 
-### Backend
+**Backend**
 
-* FastAPI (REST API)
-* OpenAI API (LLM)
+* FastAPI
 * Python
+* OpenAI API
 
-### Frontend
+**Frontend**
 
-* HTML + TailwindCSS
+* TailwindCSS
 * Vanilla JavaScript
 * Lucide Icons
 
@@ -134,74 +131,46 @@ LLM hanya boleh menjawab berdasarkan context tersebut.
 
 ## 📁 Project Structure
 
-```id="o7l5nc"
+```id="q6n8vr"
 .
-├── index.html        # Chat UI
-├── main.py           # Backend logic
+├── index.html        # UI
+├── main.py           # Backend
 ├── data.txt          # Knowledge base
-├── prompt.txt        # System prompt
+├── prompt.txt        # Prompt config
 ├── .env              # API key
 ```
 
 ---
 
-## 🔌 API Design
+## 🔌 API Endpoint
 
 ### POST `/chat`
 
-Request:
-
-```json id="u9p1g4"
+```json id="d4j1xp"
 {
-  "message": "Apa skill kamu?",
+  "message": "What are your skills?",
   "history": []
 }
-```
-
-Response:
-
-```json id="m2w7kx"
-{
-  "reply": "Saya memiliki pengalaman di..."
-}
-```
-
----
-
-## 🚀 Run Locally
-
-```bash id="k7c2az"
-git clone https://github.com/yourusername/personal-ai-chatbot.git
-cd personal-ai-chatbot
-pip install fastapi uvicorn python-dotenv openai
-```
-
-```env id="8h0qj2"
-OPENAI_API_KEY=your_api_key_here
-```
-
-```bash id="z9x2pl"
-uvicorn main:app --reload
 ```
 
 ---
 
 ## 🎯 Design Decisions
 
-* **No database** → cukup file-based untuk simplicity & speed
-* **Keyword routing** → lebih predictable dibanding embedding (untuk skala kecil)
-* **Limited history (last 8)** → menjaga token usage tetap efisien
-* **Temperature rendah (0.3)** → jawaban lebih konsisten
+* File-based knowledge → simple & portable
+* Keyword routing → deterministic & lightweight
+* No embeddings → avoid overengineering
+* Limited history → token efficiency
 
 ---
 
-## 📌 Future Improvements
+## 🚀 Future Improvements
 
-* Embedding-based retrieval (FAISS / vector DB)
-* Streaming response
-* Multi-turn memory optimization
-* Fine-tuned prompt strategy
-* Deployment scaling (Docker + reverse proxy)
+* Embedding-based retrieval
+* Vector database (FAISS / Pinecone)
+* Streaming responses
+* Multi-language support
+* Docker deployment
 
 ---
 
@@ -211,10 +180,7 @@ uvicorn main:app --reload
 
 ---
 
-## ⭐ Notes
+## ⭐ Final Thought
 
-Project ini menunjukkan pendekatan praktis untuk membangun:
-
-* AI assistant personal
-* lightweight RAG system
-* context-aware chatbot tanpa overengineering
+> Turning a portfolio into a conversation
+> creates a more engaging way to explore a candidate 🚀
