@@ -284,16 +284,12 @@ def retrieve_context(query):
     topics = detect_topics(query)
 
     if "portfolio" in topics:
-        if any(x in q for x in ["apa aja", "semua", "list", "punya"]):
+        list_keywords = ["apa aja", "semua", "list", "punya", "portfolio", "proyek", "project", "karya"]
+        
+        if any(x in q for x in list_keywords) or len(q.split()) <= 2:
             return SECTIONS.get("PORTFOLIO & LINK PROYEK", "")
 
-        if q.strip() in ["yg lain", "yang lain", "lainnya"]:
-            return SECTIONS.get("PORTFOLIO & LINK PROYEK", "")
-
-        return retrieve_portfolio_exact(query)
-
-    if not topics or "identitas" in topics:
-        return KNOWLEDGE
+        return retrieve_portfolio_exact(query)    
 
     relevant = []
     seen = set()
@@ -305,13 +301,6 @@ def retrieve_context(query):
                 seen.add(sec)
 
     return "\n\n".join(relevant) if relevant else KNOWLEDGE
-    
-if "portfolio" in topics:
-    if (
-        any(x in q for x in ["apa aja", "semua", "list", "punya"])
-        or q.strip() == "portfolio"
-    ):
-        return SECTIONS.get("PORTFOLIO & LINK PROYEK", "")
 
 BASE_SYSTEM_PROMPT = load_prompt()
 
