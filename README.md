@@ -1,73 +1,130 @@
-# 🤖 Fida's Personal AI — Interactive Portfolio Chatbot
+# 🤖 Fida's Personal AI — Context-Aware Portfolio Chatbot
 
-> 💡 **Not your typical CV. This is a conversation.**
-> 👉 Try it live: https://chatbot.zid.web.id/
-
----
-
-## 🚀 About The Project
-
-Daripada recruiter baca CV panjang yang statis, project ini mengubah portfolio menjadi **AI chatbot interaktif**.
-
-User bisa langsung bertanya seperti:
-
-* *"Apa saja pengalaman kerja kamu?"*
-* *"Skill kamu apa aja?"*
-* *"Pernah bikin project apa?"*
-
-Dan AI akan menjawab secara natural, relevan, dan berbasis data nyata.
+🔗 Live Demo: https://chatbot.zid.web.id/
 
 ---
 
-## 🎯 Why This Matters
+## 📌 Overview
 
-Sebagian besar portfolio:
+Personal AI chatbot berbasis web yang berfungsi sebagai **interactive portfolio assistant**.
 
-* ❌ Static
-* ❌ Membosankan
-* ❌ Tidak interaktif
+Sistem ini mengimplementasikan pendekatan **lightweight RAG (Retrieval-Augmented Generation)** untuk memastikan setiap jawaban:
 
-Project ini mengubah itu menjadi:
-
-* ✅ **Interactive experience**
-* ✅ **Human-like conversation**
-* ✅ **Context-aware answers**
-* ✅ **Recruiter-friendly exploration**
+* relevan
+* berbasis data
+* tidak hallucinate
 
 ---
 
-## ✨ Key Features
+## ⚙️ Architecture
 
-* 💬 **ChatGPT-like UI** (modern & clean)
-* 🧠 **Context-aware AI (RAG-based)**
-* 🎯 **Smart topic detection (skills, experience, portfolio)**
-* 📂 **Dynamic knowledge base (data.txt)**
-* 🔍 **Relevant portfolio retrieval**
-* 🧵 **Conversation memory (chat history)**
-* ⚡ **FastAPI backend (lightweight & fast)**
+```id="gk8p2x"
+User Input
+   ↓
+Keyword & Intent Detection
+   ↓
+Topic Mapping
+   ↓
+Context Retrieval (data.txt)
+   ↓
+Dynamic Prompt Injection
+   ↓
+OpenAI API (LLM)
+   ↓
+Response (UI)
+```
 
 ---
 
-## 🧠 How It Works (Simple Explanation)
+## 🧠 Core Concepts
 
-1. **User bertanya**
-2. Sistem mendeteksi topik (misal: skill / pengalaman)
-3. Hanya data relevan yang diambil
-4. AI generate jawaban berdasarkan data tersebut
+### 1. Retrieval-Augmented Generation (RAG-lite)
 
-👉 Hasilnya: **lebih akurat & tidak ngaco**
+Alih-alih mengirim seluruh knowledge ke model, sistem hanya mengirim **context yang relevan**.
+
+```python id="u2pt4j"
+context = retrieve_context(user_input)
+```
+
+✔ Lebih efisien
+✔ Lebih akurat
+✔ Minim hallucination
+
+---
+
+### 2. Keyword-Based Topic Routing
+
+Mapping keyword → topic:
+
+```python id="4i9b6q"
+KEYWORD_TOPIC = {
+    "magang": "pengalaman",
+    "skill": "skill",
+    "portfolio": "portfolio"
+}
+```
+
+Kemudian diarahkan ke section:
+
+```python id="4cbz7o"
+TOPIC_MAP = {
+    "pengalaman": ["PENGALAMAN MAGANG", "PENGALAMAN PART-TIME"]
+}
+```
+
+---
+
+### 3. Section-Based Knowledge Parsing
+
+Data di-parse dari file:
+
+```id="w5jvha"
+data.txt
+```
+
+Dengan format:
+
+```id="g1m1kg"
+==== SECTION NAME ====
+content...
+```
+
+Diubah menjadi dictionary untuk retrieval cepat.
+
+---
+
+### 4. Portfolio Relevance Scoring
+
+Portfolio tidak diambil mentah — tapi di-ranking:
+
+```python id="9qf2v1"
+score += 1 if word in text else 0
+```
+
+✔ Query "IoT" → hanya project IoT yang muncul
+✔ Lebih precise dibanding dump semua data
+
+---
+
+### 5. Dynamic System Prompt Injection
+
+```python id="q2zkv5"
+dynamic_system = BASE_PROMPT + context
+```
+
+LLM hanya boleh menjawab berdasarkan context tersebut.
 
 ---
 
 ## 🖥️ Tech Stack
 
-**Backend**
+### Backend
 
-* FastAPI
-* OpenAI API
+* FastAPI (REST API)
+* OpenAI API (LLM)
 * Python
 
-**Frontend**
+### Frontend
 
 * HTML + TailwindCSS
 * Vanilla JavaScript
@@ -75,50 +132,76 @@ Project ini mengubah itu menjadi:
 
 ---
 
-## 📸 Preview
-
-> Tampilan clean, minimal, dan fokus ke experience percakapan
-
----
-
 ## 📁 Project Structure
 
-```
+```id="o7l5nc"
 .
 ├── index.html        # Chat UI
-├── main.py           # Backend API
+├── main.py           # Backend logic
 ├── data.txt          # Knowledge base
-├── prompt.txt        # AI behavior
+├── prompt.txt        # System prompt
 ├── .env              # API key
 ```
 
+---
 
-## 💡 Example Use Cases
+## 🔌 API Design
 
-* 🧑‍💼 Recruiter screening candidate
-* 🎓 Portfolio mahasiswa
-* 💼 Personal branding
-* 🤖 AI assistant pribadi
+### POST `/chat`
+
+Request:
+
+```json id="u9p1g4"
+{
+  "message": "Apa skill kamu?",
+  "history": []
+}
+```
+
+Response:
+
+```json id="m2w7kx"
+{
+  "reply": "Saya memiliki pengalaman di..."
+}
+```
 
 ---
 
-## 🧩 What Makes This Different?
+## 🚀 Run Locally
 
-🔥 Ini bukan sekadar chatbot:
+```bash id="k7c2az"
+git clone https://github.com/yourusername/personal-ai-chatbot.git
+cd personal-ai-chatbot
+pip install fastapi uvicorn python-dotenv openai
+```
 
-* Mengubah **CV → Experience**
-* Mengubah **data → conversation**
-* Mengubah **portfolio → AI assistant**
+```env id="8h0qj2"
+OPENAI_API_KEY=your_api_key_here
+```
+
+```bash id="z9x2pl"
+uvicorn main:app --reload
+```
+
+---
+
+## 🎯 Design Decisions
+
+* **No database** → cukup file-based untuk simplicity & speed
+* **Keyword routing** → lebih predictable dibanding embedding (untuk skala kecil)
+* **Limited history (last 8)** → menjaga token usage tetap efisien
+* **Temperature rendah (0.3)** → jawaban lebih konsisten
 
 ---
 
 ## 📌 Future Improvements
 
-* Voice interaction
-* Multi-language
-* Database integration
+* Embedding-based retrieval (FAISS / vector DB)
 * Streaming response
-* Public API
+* Multi-turn memory optimization
+* Fine-tuned prompt strategy
+* Deployment scaling (Docker + reverse proxy)
 
 ---
 
@@ -127,3 +210,11 @@ Project ini mengubah itu menjadi:
 **Fida Yuzida**
 
 ---
+
+## ⭐ Notes
+
+Project ini menunjukkan pendekatan praktis untuk membangun:
+
+* AI assistant personal
+* lightweight RAG system
+* context-aware chatbot tanpa overengineering
