@@ -10,9 +10,9 @@ A **context-aware AI chatbot** designed to transform a traditional portfolio int
 
 Instead of reading static CVs, users can directly ask about:
 
-* 🧑‍💼 Experience
-* 🛠️ Skills
-* 🚀 Projects
+* Experience
+* Skills
+* Projects
 
 The system responds with **relevant, data-driven answers** using a lightweight **RAG (Retrieval-Augmented Generation)** approach.
 
@@ -40,7 +40,7 @@ Response (UI)
 
 ## 🧠 Core Features
 
-* 💬 ChatGPT-style UI (clean & responsive)
+* 💬 Clean & Responsive UI
 * 🧠 Lightweight RAG system
 * 🎯 Keyword-based topic routing
 * 📂 Structured knowledge base (section-based)
