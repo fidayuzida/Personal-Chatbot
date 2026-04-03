@@ -430,9 +430,6 @@
 
                 const trimmed = line.trim();
 
-                // =========================
-                // ✅ NUMBERED LIST
-                // =========================
                 if (/^\d+[\.\)]\s/.test(trimmed)) {
                     if (inUl) { html += '</ul>'; inUl = false; }
 
@@ -446,17 +443,11 @@
                     continue;
                 }
 
-                // =========================
-                // ✅ SUB CONTENT (Periode, Role, dll)
-                // =========================
                 if (/^(Periode|Role|Tugas|Deskripsi)/i.test(trimmed)) {
                     html += `<div style="margin-left:12px">${line}</div>`;
                     continue;
                 }
 
-                // =========================
-                // ✅ BULLET
-                // =========================
                 if (/^[-•]\s+/.test(trimmed)) {
                     const content = trimmed.replace(/^[-•]\s+/, '');
 
@@ -464,20 +455,13 @@
                     continue;
                 }
 
-                // =========================
-                // ✅ EMPTY
-                // =========================
                 if (trimmed === '') {
                     html += '<br>';
                     continue;
                 }
 
-                // =========================
-                // ✅ NORMAL TEXT
-                // =========================
                 if (inUl) { html += '</ul>'; inUl = false; }
 
-                // 🔥 JANGAN tutup ol di tengah-tengah
                 html += `</li><p>${line}</p>`;
             }
 
