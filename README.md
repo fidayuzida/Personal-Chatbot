@@ -23,17 +23,17 @@ The system responds with **relevant, data-driven answers** using a lightweight *
 ```id="g7k2df"
 User Input
    ↓
-🧠 Intent Detection
+Intent Detection
    ↓
-🏷️ Topic Mapping
+Topic Mapping
    ↓
-📂 Context Retrieval (data.txt)
+Context Retrieval (data.txt)
    ↓
-🧩 Prompt Injection
+Prompt Injection
    ↓
-🤖 OpenAI API
+OpenAI API
    ↓
-💬 Response (UI)
+Response (UI)
 ```
 
 ---
