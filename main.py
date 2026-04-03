@@ -258,15 +258,18 @@ def detect_topics(query):
             matched.add(topic)
     return list(matched)
 
+
+def load_prompt():
+    with open("prompt.txt", "r") as f:
+        return f.read()
+        
 def retrieve_context(query):
     q = query.lower()
 
-    # 🔥 FORCE pendidikan (TARUH PALING ATAS)
     if any(x in q for x in ["s1", "s2", "d3", "lulusan", "kuliah"]):
         return SECTIONS.get("PENDIDIKAN", "")
 
     special = detect_special_intent(query)
-
 
     if special == "external_experience":
         return (
@@ -278,10 +281,15 @@ def retrieve_context(query):
     if special == "availability":
         return SECTIONS.get("FAQ (PERTANYAAN UMUM)", "")
 
-
     topics = detect_topics(query)
 
     if "portfolio" in topics:
+        if any(x in q for x in ["apa aja", "semua", "list", "punya"]):
+            return SECTIONS.get("PORTFOLIO & LINK PROYEK", "")
+
+        if q.strip() in ["yg lain", "yang lain", "lainnya"]:
+            return SECTIONS.get("PORTFOLIO & LINK PROYEK", "")
+
         return retrieve_portfolio_exact(query)
 
     if not topics or "identitas" in topics:
@@ -297,11 +305,13 @@ def retrieve_context(query):
                 seen.add(sec)
 
     return "\n\n".join(relevant) if relevant else KNOWLEDGE
-
-
-def load_prompt():
-    with open("prompt.txt", "r") as f:
-        return f.read()
+    
+if "portfolio" in topics:
+    if (
+        any(x in q for x in ["apa aja", "semua", "list", "punya"])
+        or q.strip() == "portfolio"
+    ):
+        return SECTIONS.get("PORTFOLIO & LINK PROYEK", "")
 
 BASE_SYSTEM_PROMPT = load_prompt()
 
