@@ -11,18 +11,14 @@ load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 app = FastAPI()
 
-# =========================
-# LOAD KNOWLEDGE
-# =========================
+
 def load_knowledge():
     with open("data.txt", "r") as f:
         return f.read()
 
 KNOWLEDGE = load_knowledge()
 
-# =========================
-# SECTION-BASED CHUNKING
-# =========================
+
 def build_sections(knowledge):
     parts = re.split(r"={4,}\n(.+?)\n={4,}", knowledge)
     sections = {}
@@ -189,9 +185,7 @@ KEYWORD_TOPIC = {
     "berbeda":      "faq",
     "tantangan":    "faq",
 }
-# =========================
-# 🔥 PARSE PORTFOLIO ITEMS
-# =========================
+
 def parse_portfolio_items(text):
     items = []
     current = {}
@@ -215,9 +209,6 @@ def parse_portfolio_items(text):
     return items
 
 
-# =========================
-# 🔥 SIMPLE SCORING
-# =========================
 def score_item(query, item):
     q = query.lower()
     text = (item["title"] + " " + item["content"]).lower()
@@ -230,9 +221,6 @@ def score_item(query, item):
     return score
 
 
-# =========================
-# 🔥 EXACT RETRIEVAL
-# =========================
 def retrieve_portfolio_exact(query):
     portfolio_text = SECTIONS.get("PORTFOLIO & LINK PROYEK", "")
     items = parse_portfolio_items(portfolio_text)
@@ -279,9 +267,6 @@ def retrieve_context(query):
 
     special = detect_special_intent(query)
 
-    # =========================
-    # 🔥 SPECIAL INTENT HANDLING
-    # =========================
 
     if special == "external_experience":
         return (
@@ -293,9 +278,7 @@ def retrieve_context(query):
     if special == "availability":
         return SECTIONS.get("FAQ (PERTANYAAN UMUM)", "")
 
-    # =========================
-    # 🔥 NORMAL TOPIC FLOW
-    # =========================
+
     topics = detect_topics(query)
 
     if "portfolio" in topics:
